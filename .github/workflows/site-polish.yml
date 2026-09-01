@@ -1,0 +1,60 @@
+name: Polish website for public launch
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  polish:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out site
+        uses: actions/checkout@v4
+
+      - name: Remove demo-looking copy and make feedback functional
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+
+          replacements = {
+              'Verified standards, technical documents, certifications and sustainability information can be placed here as the approved company material is supplied.': 'We focus on dependable building materials, responsible use of resources and practical solutions for customers across Kenya.',
+              'Selected company milestones and business updates presented in a clean editorial format.': 'Company milestones, production growth and local manufacturing highlights.',
+              '<p class="news-source"><strong>Editorial note:</strong> These three updates are based on the company history and milestones already presented on this website. They are not presented as a live external news feed.</p>': '',
+              'DISCOVER MORE <b>→</b>': 'CONTACT SALES <b>→</b>',
+              'READ THE MILESTONE <b>→</b>': '2010 MILESTONE <b>→</b>',
+              'READ THE UPDATE <b>→</b>': '2013 EXPANSION <b>→</b>',
+              'EXPLORE THE STORY <b>→</b>': 'LOCAL MANUFACTURING <b>→</b>',
+              'SEND FEEDBACK →': 'SEND FEEDBACK VIA WHATSAPP →',
+          }
+
+          for old, new in replacements.items():
+              if old not in text:
+                  raise SystemExit(f'Expected text not found: {old[:80]}')
+              text = text.replace(old, new, 1)
+
+          old_js = "reviewForm.addEventListener('submit',event=>{event.preventDefault();if(!reviewRating){reviewStars[0].focus();return}reviewForm.reset();reviewStars.forEach(star=>star.classList.remove('active'));reviewRating=0;reviewThanks.classList.add('show')});"
+          new_js = "reviewForm.addEventListener('submit',event=>{event.preventDefault();if(!reviewRating){reviewStars[0].focus();return}const name=document.getElementById('reviewName').value.trim()||'Not provided',feedback=document.getElementById('reviewText').value.trim();if(!feedback)return;const message=`Hello Simba Cement,%0A%0ACUSTOMER FEEDBACK%0AName: ${encodeURIComponent(name)}%0ARating: ${reviewRating}/5%0AFeedback: ${encodeURIComponent(feedback)}`;window.open(`https://wa.me/254756311102?text=${message}`,'_blank','noopener');reviewForm.reset();reviewStars.forEach(star=>star.classList.remove('active'));reviewRating=0;reviewThanks.classList.add('show')});"
+          if old_js not in text:
+              raise SystemExit('Expected review submit script not found')
+          text = text.replace(old_js, new_js, 1)
+
+          path.write_text(text, encoding='utf-8')
+
+          workflow = Path('.github/workflows/site-polish.yml')
+          workflow.unlink()
+
+      - name: Commit polished site
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/site-polish.yml
+          git diff --cached --quiet || git commit -m "Polish website for public launch"
+          git push
