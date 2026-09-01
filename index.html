@@ -10,9 +10,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
-    .hero-photo{background-image:url('https://i.postimg.cc/5NCtjTVP/Screenshot-2026-09-01-205620.png')!important;background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important}
+    .hero-photo{position:absolute;inset:0;overflow:hidden;background:#d7d3c9}
+    .hero-slides{position:absolute;inset:0}
+    .hero-slide{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;transform:translateX(100%);transition:transform 1.1s cubic-bezier(.65,0,.2,1);will-change:transform}
+    .hero-slide.active{transform:translateX(0)}
+    .hero-slide.previous{transform:translateX(-100%)}
+    .hero-slide:nth-child(1){background-image:url('https://i.postimg.cc/5NCtjTVP/Screenshot-2026-09-01-205620.png')}
+    .hero-slide:nth-child(2){background-image:url('https://i.postimg.cc/9f623F43/Screenshot-2026-09-01-205703.png')}
     .hero-shade{background:linear-gradient(90deg,rgba(255,248,237,.93) 0%,rgba(255,248,237,.70) 30%,rgba(255,248,237,.16) 58%,rgba(0,0,0,.04) 100%)!important}
-    @media(max-width:760px){.hero-photo{background-position:center!important}.hero-shade{background:linear-gradient(180deg,rgba(255,248,237,.95) 0%,rgba(255,248,237,.72) 42%,rgba(255,248,237,.10) 78%,rgba(0,0,0,.08) 100%)!important}}
+    @media(max-width:760px){.hero-slide{background-position:center}.hero-shade{background:linear-gradient(180deg,rgba(255,248,237,.95) 0%,rgba(255,248,237,.72) 42%,rgba(255,248,237,.10) 78%,rgba(0,0,0,.08) 100%)!important}}
+    @media(prefers-reduced-motion:reduce){.hero-slide{transition:none}}
   </style>
 </head>
 <body>
@@ -27,7 +34,7 @@
   </header>
   <main id="home">
     <section class="hero">
-      <div class="hero-photo" aria-hidden="true"></div><div class="hero-shade" aria-hidden="true"></div>
+      <div class="hero-photo" aria-hidden="true"><div class="hero-slides"><div class="hero-slide active"></div><div class="hero-slide"></div></div></div><div class="hero-shade" aria-hidden="true"></div>
       <div class="hero-content shell"><p class="eyebrow">SIMBA CEMENT · STRENGTH WITHIN</p><h1>BUILT TO LAST.<br>BUILT FOR <span>GENERATIONS.</span></h1><p class="hero-text">Quality cement for strong, durable construction — made for homes, businesses and the infrastructure of tomorrow.</p><div class="hero-actions"><a class="button primary" href="#products">OUR PRODUCTS <b>→</b></a><a class="button secondary" href="#contact">CONTACT US <b>→</b></a></div></div>
     </section>
     <section class="promise-strip"><div class="shell promise-grid"><article><span>01</span><div><strong>PREMIUM QUALITY</strong><p>Dependable materials for confident building.</p></div></article><article><span>02</span><div><strong>WIDE APPLICATION</strong><p>For residential, commercial and infrastructure work.</p></div></article><article><span>03</span><div><strong>SUSTAINABLE</strong><p>Designed around responsible construction.</p></div></article><article><span>04</span><div><strong>TRUSTED BRAND</strong><p>Strength and reliability at every stage.</p></div></article><article><span>05</span><div><strong>CUSTOMER SUPPORT</strong><p>Clear guidance when you need it.</p></div></article></div></section>
@@ -39,5 +46,5 @@
     <section id="contact" class="contact-section"><div class="shell contact-inner"><div><p class="eyebrow">LET'S BUILD TOGETHER</p><h2>START THE<br>CONVERSATION.</h2><p>Phone number, email, WhatsApp and location will be connected here once the final business details are supplied.</p></div><a class="button light-button" href="mailto:">CONTACT US <b>→</b></a></div></section>
   </main>
   <footer class="footer"><div class="shell footer-inner"><img src="https://i.postimg.cc/CKSsrtbF/Screenshot-2026-09-01-142431.png" alt="Simba Cement"><p>Strength Within.</p><small>© <span id="year"></span> Simba Cement. Website build.</small></div></footer>
-  <script>const menuButton=document.getElementById('menuButton'),mainNav=document.getElementById('mainNav');menuButton?.addEventListener('click',()=>{const open=mainNav.classList.toggle('open');menuButton.setAttribute('aria-expanded',String(open))});mainNav?.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{mainNav.classList.remove('open');menuButton.setAttribute('aria-expanded','false')}));document.getElementById('year').textContent=new Date().getFullYear();</script>
+  <script>const menuButton=document.getElementById('menuButton'),mainNav=document.getElementById('mainNav');menuButton?.addEventListener('click',()=>{const open=mainNav.classList.toggle('open');menuButton.setAttribute('aria-expanded',String(open))});mainNav?.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{mainNav.classList.remove('open');menuButton.setAttribute('aria-expanded','false')}));document.getElementById('year').textContent=new Date().getFullYear();const heroSlides=[...document.querySelectorAll('.hero-slide')];let heroIndex=0;setInterval(()=>{if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const current=heroSlides[heroIndex],nextIndex=(heroIndex+1)%heroSlides.length,next=heroSlides[nextIndex];current.classList.remove('active');current.classList.add('previous');next.classList.remove('previous');next.classList.add('active');setTimeout(()=>current.classList.remove('previous'),1150);heroIndex=nextIndex},6000);</script>
 </body></html>
