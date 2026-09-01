@@ -10,7 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
-    .site-header .brand img{display:block;width:170px;height:auto;max-height:68px;object-fit:contain;object-position:center;transform:none;mix-blend-mode:normal}
+    .site-header .brand,.site-header .brand img{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important}
+    .site-header .brand:focus,.site-header .brand:focus-visible{outline:0!important;box-shadow:none!important}
+    .site-header .brand img{display:block;width:170px;height:auto;max-height:68px;object-fit:contain;object-position:left center;transform:none;mix-blend-mode:normal}
     .hero-photo{position:absolute;inset:0;overflow:hidden;background:#d7d3c9;z-index:0}
     .hero-slides{position:absolute;inset:0;overflow:hidden}
     .hero-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;transition:opacity 1.2s ease;will-change:opacity;display:block}
