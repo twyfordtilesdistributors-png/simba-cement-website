@@ -6,20 +6,22 @@
   <meta name="description" content="Simba Cement — Strength Within.">
   <title>Simba Cement | Strength Within</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
-    .site-header .brand,.site-header .brand img{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important}
+    .site-header .brand,.site-header .brand img{border:0!important;outline:0!important;box-shadow:none!important;background:#fff!important}
+    .site-header .brand{width:195px!important;height:72px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;overflow:hidden!important}
+    .site-header .brand img{display:block;width:185px!important;height:auto!important;max-height:68px!important;object-fit:contain!important;object-position:left center!important;transform:none!important;mix-blend-mode:normal!important}
     .site-header .brand:focus,.site-header .brand:focus-visible{outline:0!important;box-shadow:none!important}
-    .site-header .brand img{display:block;width:170px;height:auto;max-height:68px;object-fit:contain;object-position:left center;transform:none;mix-blend-mode:normal}
     .hero-photo{position:absolute;inset:0;overflow:hidden;background:#d7d3c9;z-index:0}
     .hero-slides{position:absolute;inset:0;overflow:hidden}
     .hero-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;transition:opacity 1.2s ease;will-change:opacity;display:block}
     .hero-slide.active{opacity:1}
     .hero-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(255,248,237,.58) 0%,rgba(255,248,237,.27) 28%,rgba(255,248,237,.05) 58%,rgba(0,0,0,.01) 100%)!important;pointer-events:none}
     .hero-content{z-index:2}
-    @media(max-width:760px){.site-header .brand img{width:145px;max-height:64px}.hero-slide{object-position:center}.hero-shade{background:linear-gradient(180deg,rgba(255,248,237,.68) 0%,rgba(255,248,237,.30) 42%,rgba(255,248,237,.04) 78%,rgba(0,0,0,.04) 100%)!important}}
+    @media(max-width:1050px){.site-header .brand{width:180px!important}.site-header .brand img{width:172px!important;max-height:68px!important}}
+    @media(max-width:760px){.site-header .brand{width:152px!important;height:64px!important}.site-header .brand img{width:145px!important;max-height:62px!important}.hero-slide{object-position:center}.hero-shade{background:linear-gradient(180deg,rgba(255,248,237,.68) 0%,rgba(255,248,237,.30) 42%,rgba(255,248,237,.04) 78%,rgba(0,0,0,.04) 100%)!important}}
     @media(prefers-reduced-motion:reduce){.hero-slide{transition:none}}
     .product-grid-five{grid-template-columns:repeat(5,1fr)}
     @media(max-width:1050px){.product-grid-five{grid-template-columns:repeat(3,1fr)}}
@@ -29,7 +31,7 @@
 <body>
   <header class="site-header">
     <div class="nav-shell">
-      <a class="brand" href="#home" aria-label="Simba Cement home"><img referrerpolicy="no-referrer" src="https://i.postimg.cc/CKSsrtbF/Screenshot-2026-09-01-142431.png" alt="Simba Cement — Strength Within" fetchpriority="high"></a>
+      <a class="brand" href="#home" aria-label="Simba Cement home"><img referrerpolicy="no-referrer" src="https://i.postimg.cc/LsbFMksW/Screenshot-2026-09-01-223430.png" alt="Simba Cement — Strength Within" fetchpriority="high"></a>
       <button class="menu-button" id="menuButton" aria-expanded="false" aria-controls="mainNav" aria-label="Open navigation"><span></span><span></span><span></span></button>
       <nav id="mainNav" class="main-nav" aria-label="Primary navigation">
         <a class="active" href="#home">HOME</a><a href="#about">ABOUT US</a><a href="#products">PRODUCTS</a><a href="#solutions">SOLUTIONS</a><a href="#quality">QUALITY &amp; SUSTAINABILITY</a><a href="#news">NEWS &amp; UPDATES</a><a href="#contact">CONTACT US</a>
@@ -54,7 +56,7 @@
     <section id="news" class="news-section section-space shell"><div class="section-heading"><div><p class="eyebrow dark">NEWS &amp; UPDATES</p><h2>LATEST FROM SIMBA</h2><span class="red-line"></span></div><p>A professional space for company news, product updates, project stories and announcements.</p></div><div class="news-grid"><article><span>UPDATE</span><h3>Company news and announcements</h3><p>Reserved for approved updates and dated stories.</p></article><article><span>PRODUCTS</span><h3>New products &amp; technical information</h3><p>Reserved for verified launches and product guidance.</p></article><article><span>PROJECTS</span><h3>Projects and customer stories</h3><p>Reserved for approved project photography and case studies.</p></article></div></section>
     <section id="contact" class="contact-section"><div class="shell contact-inner"><div><p class="eyebrow">LET'S BUILD TOGETHER</p><h2>START THE<br>CONVERSATION.</h2><p>Phone number, email, WhatsApp and location will be connected here once the final business details are supplied.</p></div><a class="button light-button" href="mailto:">CONTACT US <b>→</b></a></div></section>
   </main>
-  <footer class="footer"><div class="shell footer-inner"><img referrerpolicy="no-referrer" src="https://i.postimg.cc/CKSsrtbF/Screenshot-2026-09-01-142431.png" alt="Simba Cement"><p>Strength Within.</p><small>© <span id="year"></span> Simba Cement. Website build.</small></div></footer>
+  <footer class="footer"><div class="shell footer-inner"><img referrerpolicy="no-referrer" src="https://i.postimg.cc/LsbFMksW/Screenshot-2026-09-01-223430.png" alt="Simba Cement"><p>Strength Within.</p><small>© <span id="year"></span> Simba Cement. Website build.</small></div></footer>
   <script>const menuButton=document.getElementById('menuButton'),mainNav=document.getElementById('mainNav');menuButton?.addEventListener('click',()=>{const open=mainNav.classList.toggle('open');menuButton.setAttribute('aria-expanded',String(open))});mainNav?.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{mainNav.classList.remove('open');menuButton.setAttribute('aria-expanded','false')}));document.getElementById('year').textContent=new Date().getFullYear();const heroSlides=[...document.querySelectorAll('.hero-slide')];let heroIndex=0;setInterval(()=>{if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;heroSlides[heroIndex].classList.remove('active');heroIndex=(heroIndex+1)%heroSlides.length;heroSlides[heroIndex].classList.add('active')},6500);</script>
 </body>
 </html>
