@@ -1,0 +1,31 @@
+name: One-time review copy fix
+on:
+  push:
+    branches: [temp-final-copy]
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove review intro copy
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path("index.html")
+          text = p.read_text(encoding="utf-8")
+          old = "<p>Tell us how your experience was. This quick feedback form stays on this device and is not sent to our sales team or published as a public testimonial.</p>"
+          if old not in text:
+              raise SystemExit("Review intro copy not found")
+          text = text.replace(old, "", 1)
+          p.write_text(text, encoding="utf-8")
+          Path(".github/workflows/one-time-review-copy-fix.yml").unlink()
+      - name: Commit and push
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/one-time-review-copy-fix.yml
+          git commit -m "Remove review intro copy"
+          git push
