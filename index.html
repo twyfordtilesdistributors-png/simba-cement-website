@@ -13,12 +13,12 @@
     .site-header .brand img{display:block;width:170px;height:auto;max-height:68px;object-fit:contain;object-position:center;transform:none;mix-blend-mode:normal}
     .hero-photo{position:absolute;inset:0;overflow:hidden;background:#d7d3c9;z-index:0}
     .hero-slides{position:absolute;inset:0;overflow:hidden}
-    .hero-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;transform:scale(1.02);transition:opacity 1.35s ease,transform 7s ease;will-change:opacity,transform;display:block}
-    .hero-slide.active{opacity:1;transform:scale(1)}
-    .hero-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(255,248,237,.62) 0%,rgba(255,248,237,.34) 28%,rgba(255,248,237,.06) 58%,rgba(0,0,0,.02) 100%)!important}
+    .hero-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;transition:opacity 1.2s ease;will-change:opacity;display:block}
+    .hero-slide.active{opacity:1}
+    .hero-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(255,248,237,.58) 0%,rgba(255,248,237,.27) 28%,rgba(255,248,237,.05) 58%,rgba(0,0,0,.01) 100%)!important;pointer-events:none}
     .hero-content{z-index:2}
-    @media(max-width:760px){.site-header .brand img{width:145px;max-height:64px}.hero-slide{object-position:center}.hero-shade{background:linear-gradient(180deg,rgba(255,248,237,.72) 0%,rgba(255,248,237,.38) 42%,rgba(255,248,237,.05) 78%,rgba(0,0,0,.05) 100%)!important}}
-    @media(prefers-reduced-motion:reduce){.hero-slide{transition:opacity .2s ease,transform .2s ease}}
+    @media(max-width:760px){.site-header .brand img{width:145px;max-height:64px}.hero-slide{object-position:center}.hero-shade{background:linear-gradient(180deg,rgba(255,248,237,.68) 0%,rgba(255,248,237,.30) 42%,rgba(255,248,237,.04) 78%,rgba(0,0,0,.04) 100%)!important}}
+    @media(prefers-reduced-motion:reduce){.hero-slide{transition:none}}
     .product-grid-five{grid-template-columns:repeat(5,1fr)}
     @media(max-width:1050px){.product-grid-five{grid-template-columns:repeat(3,1fr)}}
     @media(max-width:760px){.product-grid-five{grid-template-columns:1fr}}
@@ -27,7 +27,7 @@
 <body>
   <header class="site-header">
     <div class="nav-shell">
-      <a class="brand" href="#home" aria-label="Simba Cement home"><img src="https://i.postimg.cc/CKSsrtbF/Screenshot-2026-09-01-142431.png" alt="Simba Cement — Strength Within"></a>
+      <a class="brand" href="#home" aria-label="Simba Cement home"><img referrerpolicy="no-referrer" src="https://i.postimg.cc/CKSsrtbF/Screenshot-2026-09-01-142431.png" alt="Simba Cement — Strength Within" fetchpriority="high"></a>
       <button class="menu-button" id="menuButton" aria-expanded="false" aria-controls="mainNav" aria-label="Open navigation"><span></span><span></span><span></span></button>
       <nav id="mainNav" class="main-nav" aria-label="Primary navigation">
         <a class="active" href="#home">HOME</a><a href="#about">ABOUT US</a><a href="#products">PRODUCTS</a><a href="#solutions">SOLUTIONS</a><a href="#quality">QUALITY &amp; SUSTAINABILITY</a><a href="#news">NEWS &amp; UPDATES</a><a href="#contact">CONTACT US</a>
@@ -37,9 +37,9 @@
   <main id="home">
     <section class="hero">
       <div class="hero-photo" aria-hidden="true"><div class="hero-slides">
-        <img class="hero-slide active" src="https://i.postimg.cc/5NCtjTVP/Screenshot-2026-09-01-205620.png" alt="">
-        <img class="hero-slide" src="https://i.postimg.cc/9f623F43/Screenshot-2026-09-01-205703.png" alt="">
-        <img class="hero-slide" src="https://i.postimg.cc/vHt5c4bZ/Screenshot-2026-09-01-205810.png" alt="">
+        <img referrerpolicy="no-referrer" class="hero-slide active" src="https://i.postimg.cc/5NCtjTVP/Screenshot-2026-09-01-205620.png" alt="" fetchpriority="high">
+        <img referrerpolicy="no-referrer" class="hero-slide" src="https://i.postimg.cc/9f623F43/Screenshot-2026-09-01-205703.png" alt="" loading="eager">
+        <img referrerpolicy="no-referrer" class="hero-slide" src="https://i.postimg.cc/vHt5c4bZ/Screenshot-2026-09-01-205810.png" alt="" loading="eager">
       </div></div>
       <div class="hero-shade" aria-hidden="true"></div>
       <div class="hero-content shell"><p class="eyebrow">SIMBA CEMENT · STRENGTH WITHIN</p><h1>BUILT TO LAST.<br>BUILT FOR <span>GENERATIONS.</span></h1><p class="hero-text">Quality cement for strong, durable construction — made for homes, businesses and the infrastructure of tomorrow.</p><div class="hero-actions"><a class="button primary" href="#products">OUR PRODUCTS <b>→</b></a><a class="button secondary" href="#contact">CONTACT US <b>→</b></a></div></div>
@@ -52,7 +52,7 @@
     <section id="news" class="news-section section-space shell"><div class="section-heading"><div><p class="eyebrow dark">NEWS &amp; UPDATES</p><h2>LATEST FROM SIMBA</h2><span class="red-line"></span></div><p>A professional space for company news, product updates, project stories and announcements.</p></div><div class="news-grid"><article><span>UPDATE</span><h3>Company news and announcements</h3><p>Reserved for approved updates and dated stories.</p></article><article><span>PRODUCTS</span><h3>New products &amp; technical information</h3><p>Reserved for verified launches and product guidance.</p></article><article><span>PROJECTS</span><h3>Projects and customer stories</h3><p>Reserved for approved project photography and case studies.</p></article></div></section>
     <section id="contact" class="contact-section"><div class="shell contact-inner"><div><p class="eyebrow">LET'S BUILD TOGETHER</p><h2>START THE<br>CONVERSATION.</h2><p>Phone number, email, WhatsApp and location will be connected here once the final business details are supplied.</p></div><a class="button light-button" href="mailto:">CONTACT US <b>→</b></a></div></section>
   </main>
-  <footer class="footer"><div class="shell footer-inner"><img src="https://i.postimg.cc/CKSsrtbF/Screenshot-2026-09-01-142431.png" alt="Simba Cement"><p>Strength Within.</p><small>© <span id="year"></span> Simba Cement. Website build.</small></div></footer>
-  <script>const menuButton=document.getElementById('menuButton'),mainNav=document.getElementById('mainNav');menuButton?.addEventListener('click',()=>{const open=mainNav.classList.toggle('open');menuButton.setAttribute('aria-expanded',String(open))});mainNav?.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{mainNav.classList.remove('open');menuButton.setAttribute('aria-expanded','false')}));document.getElementById('year').textContent=new Date().getFullYear();const heroSlides=[...document.querySelectorAll('.hero-slide')];let heroIndex=0;setInterval(()=>{if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;const current=heroSlides[heroIndex];const nextIndex=(heroIndex+1)%heroSlides.length;const next=heroSlides[nextIndex];current.classList.remove('active');next.classList.add('active');heroIndex=nextIndex},6500);</script>
+  <footer class="footer"><div class="shell footer-inner"><img referrerpolicy="no-referrer" src="https://i.postimg.cc/CKSsrtbF/Screenshot-2026-09-01-142431.png" alt="Simba Cement"><p>Strength Within.</p><small>© <span id="year"></span> Simba Cement. Website build.</small></div></footer>
+  <script>const menuButton=document.getElementById('menuButton'),mainNav=document.getElementById('mainNav');menuButton?.addEventListener('click',()=>{const open=mainNav.classList.toggle('open');menuButton.setAttribute('aria-expanded',String(open))});mainNav?.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{mainNav.classList.remove('open');menuButton.setAttribute('aria-expanded','false')}));document.getElementById('year').textContent=new Date().getFullYear();const heroSlides=[...document.querySelectorAll('.hero-slide')];let heroIndex=0;setInterval(()=>{if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;heroSlides[heroIndex].classList.remove('active');heroIndex=(heroIndex+1)%heroSlides.length;heroSlides[heroIndex].classList.add('active')},6500);</script>
 </body>
 </html>
