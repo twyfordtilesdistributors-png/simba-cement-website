@@ -1,0 +1,100 @@
+name: Fix mobile Shop header controls
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Force reliable mobile menu and back controls
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('shop.html')
+          s = p.read_text(encoding='utf-8')
+          marker='</style>'
+          css='''
+    /* Reliable mobile controls for the standalone Shop page. */
+    @media (max-width:760px){
+      .site-header .nav-shell{position:relative;min-height:64px}
+      #menuButton,#shopBackButton{z-index:1000!important;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+      #menuButton{position:absolute!important;right:12px!important;top:50%!important;transform:translateY(-50%)!important;width:48px!important;height:48px!important;margin:0!important;display:flex!important;align-items:center!important;justify-content:center!important;cursor:pointer!important;pointer-events:auto!important;touch-action:manipulation!important}
+      #shopBackButton{position:absolute!important;right:64px!important;top:50%!important;transform:translateY(-50%)!important;width:42px!important;height:42px!important;margin:0!important;display:flex!important;align-items:center!important;justify-content:center!important;cursor:pointer!important;pointer-events:auto!important;touch-action:manipulation!important}
+      #mainNav{position:absolute!important;left:0!important;right:0!important;top:64px!important;z-index:999!important;display:none!important;pointer-events:none!important;background:#171717!important;padding:14px 18px 18px!important;flex-direction:column!important;gap:0!important;box-shadow:0 12px 28px rgba(0,0,0,.2)!important}
+      #mainNav.open,#mainNav.menu-open{display:flex!important;pointer-events:auto!important}
+      #mainNav a{display:block!important;width:100%!important;padding:13px 4px!important;color:#fff!important;border-bottom:1px solid rgba(255,255,255,.12)!important}
+      #mainNav a:last-child{border-bottom:0!important}
+      body.shop-menu-open{overflow:hidden}
+    }
+    '''
+          if 'Reliable mobile controls for the standalone Shop page.' not in s:
+              s=s.replace(marker,css+marker,1)
+
+          marker_body='</body>'
+          js='''
+<script>
+(function(){
+  function ready(){
+    const menu=document.getElementById('menuButton');
+    const nav=document.getElementById('mainNav');
+    const back=document.getElementById('shopBackButton');
+    if(!menu || !nav) return;
+    menu.type='button';
+    function openMenu(){
+      nav.classList.add('open','menu-open');
+      menu.setAttribute('aria-expanded','true');
+      document.body.classList.add('shop-menu-open');
+    }
+    function closeMenu(){
+      nav.classList.remove('open','menu-open');
+      menu.setAttribute('aria-expanded','false');
+      document.body.classList.remove('shop-menu-open');
+    }
+    function toggleMenu(e){
+      if(e){e.preventDefault();e.stopPropagation();}
+      if(nav.classList.contains('open')) closeMenu(); else openMenu();
+    }
+    menu.addEventListener('click',toggleMenu,{capture:true});
+    menu.addEventListener('touchend',toggleMenu,{capture:true,passive:false});
+    nav.querySelectorAll('a').forEach(a=>{
+      a.addEventListener('click',closeMenu);
+      a.addEventListener('touchend',closeMenu);
+    });
+    document.addEventListener('click',function(e){
+      if(!nav.contains(e.target) && e.target!==menu && !menu.contains(e.target)) closeMenu();
+    });
+    document.addEventListener('touchend',function(e){
+      if(!nav.contains(e.target) && e.target!==menu && !menu.contains(e.target)) closeMenu();
+    },{passive:true});
+    if(back){
+      function goBack(e){
+        e.preventDefault(); e.stopPropagation();
+        if(window.history.length>1) window.history.back(); else window.location.href='index.html#home';
+      }
+      back.addEventListener('click',goBack,{capture:true});
+      back.addEventListener('touchend',goBack,{capture:true,passive:false});
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',ready); else ready();
+})();
+</script>
+'''
+          if 'Force reliable mobile Shop header controls' not in s and '</body>' in s:
+              s=s.replace(marker_body,js+marker_body,1)
+          p.write_text(s,encoding='utf-8')
+      - name: Commit repair
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add shop.html
+          git diff --cached --quiet || git commit -m 'Fix Shop mobile menu and back button'
+          git push
+      - name: Remove workflow
+        if: always()
+        run: |
+          git rm -f .github/workflows/fix-mobile-shop-header.yml || true
+          git diff --cached --quiet || git commit -m 'Remove temporary mobile Shop workflow'
+          git push
