@@ -1,0 +1,61 @@
+name: Move Shop cart inline with filters
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  move-cart:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Move cart into filter row
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('shop.html')
+          s = p.read_text()
+          old = '<button class="cart-fab" id="cartFab" type="button" aria-label="Open cart">'
+          if old not in s:
+              raise SystemExit('cart button not found')
+          start = s.index(old)
+          end = s.index('</button>', start) + len('</button>')
+          cart = s[start:end]
+          s = s[:start] + s[end:]
+          marker = '<div class="shop-tools"><div class="shop-filters">'
+          if marker not in s:
+              raise SystemExit('shop-tools marker not found')
+          s = s.replace(marker, marker, 1)
+          close_filters = '</div><div class="shop-count" id="shopCount">'
+          if close_filters not in s:
+              raise SystemExit('shop-filters closing marker not found')
+          inline = '</div><div class="shop-cart-inline">' + cart + '</div><div class="shop-count" id="shopCount">'
+          s = s.replace(close_filters, inline, 1)
+          p.write_text(s)
+          PY
+      - name: Style inline cart control
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('shop.html')
+          s = p.read_text()
+          css = '''\n    .shop-cart-inline{display:flex;align-items:center;margin-left:auto;flex:0 0 auto}.shop-cart-inline .cart-fab{position:relative;right:auto;bottom:auto;z-index:60;min-width:64px;height:48px;padding:0 15px;transform:none}.shop-cart-inline .cart-fab:hover{transform:translateY(-1px)}\n    @media(max-width:760px){.shop-tools{align-items:center}.shop-cart-inline{margin-left:8px}.shop-cart-inline .cart-fab{height:44px;min-width:58px;padding:0 13px}.shop-count{display:none}}\n'''
+          if '.shop-cart-inline{' not in s:
+              s = s.replace('</style>', css + '</style>', 1)
+          p.write_text(s)
+          PY
+      - name: Commit change
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add shop.html
+          git diff --cached --quiet || git commit -m 'Place Shop cart inline with product filters'
+          git push
+      - name: Remove temporary workflow
+        if: always()
+        run: |
+          rm -f .github/workflows/shop-cart-inline.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/shop-cart-inline.yml
+          git diff --cached --quiet || git commit -m 'Remove temporary cart inline workflow'
+          git push
