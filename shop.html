@@ -34,6 +34,21 @@
   #mainNav.open{display:flex!important;pointer-events:auto!important}
   #mainNav a{display:block!important;width:100%!important;color:#fff!important;padding:14px 4px!important;border-bottom:1px solid rgba(255,255,255,.14)!important}
 }
+    /* SHOP CART INLINE FINAL */
+    .shop-tools{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:12px!important;width:100%!important}
+    .shop-filters{display:flex!important;align-items:center!important;gap:8px!important;flex:1 1 auto!important;min-width:0!important;flex-wrap:nowrap!important;overflow-x:auto!important;scrollbar-width:none!important}
+    .shop-filters::-webkit-scrollbar{display:none!important}
+    .filter-btn{flex:0 0 auto!important;white-space:nowrap!important}
+    .shop-count{display:none!important}
+    .shop-cart-inline{display:flex!important;align-items:center!important;flex:0 0 auto!important;margin:0!important}
+    .shop-cart-inline .cart-fab{position:relative!important;top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;transform:none!important;margin:0!important;z-index:300!important;min-width:64px!important;height:44px!important;padding:0 12px!important}
+    .shop-cart-inline .cart-fab:hover{transform:none!important}
+    @media(max-width:760px){
+      .shop-tools{padding:18px 0 10px!important;gap:8px!important;overflow:hidden!important}
+      .shop-filters{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
+      .shop-cart-inline{flex:0 0 auto!important}
+      .shop-cart-inline .cart-fab{min-width:58px!important;height:42px!important;padding:0 10px!important}
+    }
 </style>
 </head>
 <body>
@@ -47,7 +62,7 @@
   <main>
     <section class="shop-hero"><div class="shell shop-hero-inner"><div><p class="eyebrow">SHOP / PRODUCTS</p><h1>BUILD YOUR <span>ORDER.</span></h1></div><p>Browse our construction materials, add exactly what you need to your cart and send the completed order to our sales team on WhatsApp.</p></div></section>
     <section class="shell">
-      <div class="shop-tools"><div class="shop-filters"><button class="filter-btn active" type="button" data-filter="all">ALL PRODUCTS</button><button class="filter-btn" type="button" data-filter="cement">CEMENT</button><button class="filter-btn" type="button" data-filter="steel">STEEL</button><button class="filter-btn" type="button" data-filter="accessory">ACCESSORIES</button></div><div class="shop-count" id="shopCount">5 products</div></div>
+      <div class="shop-tools"><div class="shop-filters"><button class="filter-btn active" type="button" data-filter="all">ALL PRODUCTS</button><button class="filter-btn" type="button" data-filter="cement">CEMENT</button><button class="filter-btn" type="button" data-filter="steel">STEEL</button><button class="filter-btn" type="button" data-filter="accessory">ACCESSORIES</button></div><div class="shop-cart-inline"><button class="cart-fab" id="cartFab" type="button" aria-label="Open shopping cart"><span>🛒</span><span class="cart-count" id="cartCount">0</span></button></div><div class="shop-count" id="shopCount">5 products</div></div>
       <div class="shop-grid" id="shopGrid">
         <article class="shop-card" data-category="cement"><div class="shop-photo"><img referrerpolicy="no-referrer" src="https://i.postimg.cc/HLjF3JtR/Screenshot-2026-09-01-205350.png" alt="Simba Cement 32.5R" loading="lazy" decoding="async"></div><div class="shop-info"><p class="shop-type">CEMENT</p><h2>Simba Cement 32.5R</h2><p>A dependable 32.5 strength-class cement for general building work, masonry, concrete and everyday construction applications.</p><div class="shop-buy"><p class="shop-price"><span>KSh 550</span></p><button type="button" class="shop-add" data-product="Simba Cement 32.5R" data-price="550" data-image="https://i.postimg.cc/HLjF3JtR/Screenshot-2026-09-01-205350.png">ADD TO CART +</button></div></div></article>
         <article class="shop-card" data-category="cement"><div class="shop-photo"><img referrerpolicy="no-referrer" src="https://i.postimg.cc/Gmg5BL14/Screenshot-2026-09-01-205450.png" alt="Simba Power 42.5N" loading="lazy" decoding="async"></div><div class="shop-info"><p class="shop-type">CEMENT</p><h2>Simba Power 42.5N</h2><p>A 42.5N cement suited to structural concrete and projects where higher strength performance is required.</p><div class="shop-buy"><p class="shop-price"><span>KSh 680</span></p><button type="button" class="shop-add" data-product="Simba Power 42.5N" data-price="680" data-image="https://i.postimg.cc/Gmg5BL14/Screenshot-2026-09-01-205450.png">ADD TO CART +</button></div></div></article>
@@ -67,7 +82,6 @@
 
   <footer class="site-footer"><div class="shell footer-grid"><a class="brand footer-brand" href="index.html#home" aria-label="Simba Cement home"><img referrerpolicy="no-referrer" src="https://i.postimg.cc/LsbFMksW/Screenshot-2026-09-01-223430.png" alt="Simba Cement — Strength Within" loading="lazy" decoding="async"></a><p>Strength Within.</p><div><a href="index.html#about">ABOUT</a><a href="shop.html">SHOP</a><a href="index.html#contact">CONTACT</a></div></div><div class="legal-links" style="display:flex;flex-wrap:wrap;gap:14px;margin-top:18px;font-size:10px"><a href="privacy-policy.html">Privacy Policy</a><a href="terms-and-conditions.html">Terms &amp; Conditions</a><a href="delivery-returns.html">Delivery &amp; Returns</a></div></footer>
 
-  <button class="cart-fab" id="cartFab" type="button" aria-label="Open shopping cart"><span>🛒</span><span class="cart-count" id="cartCount">0</span></button>
   <div class="cart-overlay" id="cartOverlay" aria-hidden="true"><aside class="cart-panel" role="dialog" aria-modal="true" aria-labelledby="cartTitle"><div class="cart-head"><h3 id="cartTitle">Your Order</h3><button class="close-btn" id="closeCart" type="button" aria-label="Close cart">×</button></div><div class="cart-body" id="cartBody"></div><div class="cart-foot"><div class="cart-total"><span>Total</span><span id="cartTotal">KSh 0</span></div><button class="checkout-btn" id="checkoutButton" type="button" disabled>CONTINUE TO CHECKOUT →</button></div></aside></div>
 
   <div class="checkout-overlay" id="checkoutOverlay" aria-hidden="true"><div class="checkout-box" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle"><div class="checkout-head"><h3 id="checkoutTitle">Customer Details</h3><button class="close-btn" id="closeCheckout" type="button" aria-label="Close checkout">×</button></div><form class="checkout-form" id="checkoutForm"><div class="form-grid"><div class="field"><label for="customerName">FULL NAME</label><input id="customerName" name="name" required autocomplete="name" placeholder="Your full name"></div><div class="field"><label for="customerPhone">PHONE NUMBER</label><input id="customerPhone" name="phone" required autocomplete="tel" inputmode="tel" placeholder="07xx xxx xxx"></div><div class="field full"><label for="customerLocation">DELIVERY LOCATION</label><input id="customerLocation" name="location" required autocomplete="street-address" placeholder="Town, area or delivery location"></div><div class="field full"><label for="customerNotes">ORDER NOTES (OPTIONAL)</label><textarea id="customerNotes" name="notes" rows="3" placeholder="Delivery timing, quantity details or other notes"></textarea></div></div><div class="checkout-summary" id="checkoutSummary"></div><p class="checkout-note">Your order will open in WhatsApp with your details, products and total ready to send to our sales team at 0756 311 102.</p><button class="submit-order" type="submit">PROCEED TO WHATSAPP →</button></form></div></div>
