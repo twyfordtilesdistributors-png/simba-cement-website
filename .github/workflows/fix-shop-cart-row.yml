@@ -16,19 +16,14 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import re
-
           p = Path('shop.html')
           s = p.read_text(encoding='utf-8')
-
-          # Remove the existing cart button wherever it currently sits.
           cart_re = re.compile(r'<button\b(?=[^>]*\bid=["\']cartFab["\'])[^>]*>.*?</button>', re.S)
           m = cart_re.search(s)
           if not m:
               raise SystemExit('cart button not found')
           cart = m.group(0)
           s = s[:m.start()] + s[m.end():]
-
-          # Find the filter row and insert the cart immediately after the filters.
           filters = s.find('<div class="shop-filters">')
           if filters < 0:
               raise SystemExit('shop-filters not found')
@@ -36,23 +31,44 @@ jobs:
           if filters_end < 0:
               raise SystemExit('shop-filters closing tag not found')
           filters_end += len('</div>')
-
-          inline = '\n        <div class="shop-cart-inline">' + cart + '</div>'
-          s = s[:filters_end] + inline + s[filters_end:]
-
-          css_marker = '/* SHOP CART ROW - FINAL */'
-          css = '''\n    /* SHOP CART ROW - FINAL */\n    .shop-tools{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:12px!important;width:100%!important}\n    .shop-filters{display:flex!important;align-items:center!important;gap:8px!important;flex:1 1 auto!important;min-width:0!important;flex-wrap:nowrap!important;overflow-x:auto!important;scrollbar-width:none!important}\n    .shop-filters::-webkit-scrollbar{display:none!important}\n    .filter-btn{flex:0 0 auto!important;white-space:nowrap!important}\n    .shop-count{display:none!important}\n    .shop-cart-inline{display:flex!important;align-items:center!important;flex:0 0 auto!important;margin:0!important}\n    .shop-cart-inline .cart-fab{position:relative!important;top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;transform:none!important;margin:0!important;z-index:300!important;min-width:72px!important;height:46px!important;padding:0 14px!important}\n    .shop-cart-inline .cart-fab:hover{transform:none!important}\n    @media(max-width:760px){\n      .shop-tools{padding:18px 0 10px!important;gap:8px!important;overflow:hidden!important}\n      .shop-filters{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}\n      .shop-cart-inline{flex:0 0 auto!important}\n      .shop-cart-inline .cart-fab{min-width:60px!important;height:42px!important;padding:0 10px!important}\n    }\n'''
-          if css_marker not in s:
+          s = s[:filters_end] + '\n        <div class="shop-cart-inline">' + cart + '</div>' + s[filters_end:]
+          marker = '/* SHOP CART ROW - FINAL */'
+          css = '''
+    /* SHOP CART ROW - FINAL */
+    .shop-tools{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:12px!important;width:100%!important}
+    .shop-filters{display:flex!important;align-items:center!important;gap:8px!important;flex:1 1 auto!important;min-width:0!important;flex-wrap:nowrap!important;overflow-x:auto!important;scrollbar-width:none!important}
+    .shop-filters::-webkit-scrollbar{display:none!important}
+    .filter-btn{flex:0 0 auto!important;white-space:nowrap!important}
+    .shop-count{display:none!important}
+    .shop-cart-inline{display:flex!important;align-items:center!important;flex:0 0 auto!important;margin:0!important}
+    .shop-cart-inline .cart-fab{position:relative!important;top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;transform:none!important;margin:0!important;z-index:300!important;min-width:72px!important;height:46px!important;padding:0 14px!important}
+    .shop-cart-inline .cart-fab:hover{transform:none!important}
+    @media(max-width:760px){
+      .shop-tools{padding:18px 0 10px!important;gap:8px!important;overflow:hidden!important}
+      .shop-filters{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
+      .shop-cart-inline{flex:0 0 auto!important}
+      .shop-cart-inline .cart-fab{min-width:60px!important;height:42px!important;padding:0 10px!important}
+    }
+'''
+          if marker not in s:
               s = s.replace('</style>', css + '</style>', 1)
-
           p.write_text(s, encoding='utf-8')
           PY
-      - name: Commit repair and remove temporary workflows
+      - name: Commit repair
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          rm -f .github/workflows/fix-mobile-shop-header.yml .github/workflows/shop-cart-inline.yml .github/workflows/fix-shop-cart-row.yml
-          git add shop.html .github/workflows/fix-mobile-shop-header.yml .github/workflows/shop-cart-inline.yml .github/workflows/fix-shop-cart-row.yml
-          git diff --cached --quiet || git commit -m 'Place Shop cart directly beside product filters'
+          git add shop.html
+          git add -u .github/workflows
+          git commit -m 'Place Shop cart directly beside product filters'
           git push
+      - name: Remove this one-time workflow
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -f .github/workflows/fix-shop-cart-row.yml
+          git add -u .github/workflows
+          git commit -m 'Remove one-time Shop cart repair workflow' || true
+          git push || true
