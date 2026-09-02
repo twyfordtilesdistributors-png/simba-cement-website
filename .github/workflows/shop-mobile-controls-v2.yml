@@ -1,0 +1,71 @@
+name: Repair Shop mobile header controls
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Shop mobile controls
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('shop.html')
+          s=p.read_text(encoding='utf-8')
+          css=r'''
+          @media (max-width:760px){
+            .site-header .nav-shell{position:relative!important;min-height:64px!important}
+            #menuButton{position:absolute!important;right:8px!important;top:50%!important;transform:translateY(-50%)!important;width:50px!important;height:50px!important;margin:0!important;display:flex!important;align-items:center!important;justify-content:center!important;z-index:9999!important;pointer-events:auto!important;touch-action:manipulation!important}
+            #shopBackButton{position:absolute!important;right:62px!important;top:50%!important;transform:translateY(-50%)!important;width:44px!important;height:44px!important;margin:0!important;display:flex!important;align-items:center!important;justify-content:center!important;z-index:9999!important;pointer-events:auto!important;touch-action:manipulation!important}
+            #mainNav{position:absolute!important;left:0!important;right:0!important;top:64px!important;display:none!important;flex-direction:column!important;background:#171717!important;padding:12px 18px 16px!important;z-index:9998!important;pointer-events:none!important}
+            #mainNav.open{display:flex!important;pointer-events:auto!important}
+            #mainNav a{display:block!important;width:100%!important;color:#fff!important;padding:14px 4px!important;border-bottom:1px solid rgba(255,255,255,.14)!important}
+          }
+          '''
+          if '/* SHOP MOBILE CONTROLS V2 */' not in s:
+              s=s.replace('</style>','/* SHOP MOBILE CONTROLS V2 */\n'+css+'</style>',1)
+          js=r'''
+          <script id="shop-mobile-controls-v2">
+          (function(){
+            function init(){
+              var m=document.getElementById('menuButton');
+              var n=document.getElementById('mainNav');
+              var b=document.getElementById('shopBackButton');
+              if(!m||!n) return;
+              m.type='button';
+              function closeMenu(){n.classList.remove('open');m.setAttribute('aria-expanded','false');}
+              function toggle(e){if(e){e.preventDefault();e.stopImmediatePropagation();} if(n.classList.contains('open')) closeMenu(); else {n.classList.add('open');m.setAttribute('aria-expanded','true');}}
+              m.addEventListener('touchstart',toggle,{passive:false,capture:true});
+              m.addEventListener('click',toggle,{capture:true});
+              Array.prototype.forEach.call(n.querySelectorAll('a'),function(a){a.addEventListener('click',closeMenu);});
+              if(b){
+                function back(e){if(e){e.preventDefault();e.stopImmediatePropagation();} if(history.length>1) history.back(); else location.href='index.html#home';}
+                b.addEventListener('touchstart',back,{passive:false,capture:true});
+                b.addEventListener('click',back,{capture:true});
+              }
+            }
+            if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+          })();
+          </script>
+          '''
+          if 'shop-mobile-controls-v2' not in s:
+              s=s.replace('</body>',js+'</body>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit repair
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add shop.html
+          git diff --cached --quiet || git commit -m 'Repair Shop mobile header controls'
+          git push
+      - name: Remove temporary workflow
+        if: always()
+        run: |
+          git rm -f .github/workflows/shop-mobile-controls-v2.yml || true
+          git diff --cached --quiet || git commit -m 'Remove temporary mobile controls workflow'
+          git push
