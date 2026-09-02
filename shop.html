@@ -24,7 +24,17 @@
   
     .shop-back-button{display:none;border:0;background:transparent;color:#171717;width:42px;height:42px;padding:0;margin-right:6px;font-size:25px;line-height:1;cursor:pointer;align-items:center;justify-content:center;position:relative;z-index:300;pointer-events:auto;touch-action:manipulation}
     @media(max-width:760px){.shop-back-button{display:flex}.site-header .nav-shell{position:relative}.shop-back-button{position:absolute;right:58px;top:50%;transform:translateY(-50%)}}
-    </style>
+    /* SHOP MOBILE CONTROLS V2 */
+
+@media (max-width:760px){
+  .site-header .nav-shell{position:relative!important;min-height:64px!important}
+  #menuButton{position:absolute!important;right:8px!important;top:50%!important;transform:translateY(-50%)!important;width:50px!important;height:50px!important;margin:0!important;display:flex!important;align-items:center!important;justify-content:center!important;z-index:9999!important;pointer-events:auto!important;touch-action:manipulation!important}
+  #shopBackButton{position:absolute!important;right:62px!important;top:50%!important;transform:translateY(-50%)!important;width:44px!important;height:44px!important;margin:0!important;display:flex!important;align-items:center!important;justify-content:center!important;z-index:9999!important;pointer-events:auto!important;touch-action:manipulation!important}
+  #mainNav{position:absolute!important;left:0!important;right:0!important;top:64px!important;display:none!important;flex-direction:column!important;background:#171717!important;padding:12px 18px 16px!important;z-index:9998!important;pointer-events:none!important}
+  #mainNav.open{display:flex!important;pointer-events:auto!important}
+  #mainNav a{display:block!important;width:100%!important;color:#fff!important;padding:14px 4px!important;border-bottom:1px solid rgba(255,255,255,.14)!important}
+}
+</style>
 </head>
 <body>
   <header class="site-header"><div class="nav-shell">
@@ -230,6 +240,29 @@
   });
 
   renderCart();
+})();
+</script>
+
+<script id="shop-mobile-controls-v2">
+(function(){
+  function init(){
+    var m=document.getElementById('menuButton');
+    var n=document.getElementById('mainNav');
+    var b=document.getElementById('shopBackButton');
+    if(!m||!n) return;
+    m.type='button';
+    function closeMenu(){n.classList.remove('open');m.setAttribute('aria-expanded','false');}
+    function toggle(e){if(e){e.preventDefault();e.stopImmediatePropagation();} if(n.classList.contains('open')) closeMenu(); else {n.classList.add('open');m.setAttribute('aria-expanded','true');}}
+    m.addEventListener('touchstart',toggle,{passive:false,capture:true});
+    m.addEventListener('click',toggle,{capture:true});
+    Array.prototype.forEach.call(n.querySelectorAll('a'),function(a){a.addEventListener('click',closeMenu);});
+    if(b){
+      function back(e){if(e){e.preventDefault();e.stopImmediatePropagation();} if(history.length>1) history.back(); else location.href='index.html#home';}
+      b.addEventListener('touchstart',back,{passive:false,capture:true});
+      b.addEventListener('click',back,{capture:true});
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
 </script>
 </body>
