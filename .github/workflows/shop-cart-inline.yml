@@ -1,52 +1,68 @@
 name: Move Shop cart inline with filters
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   move-cart:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Move cart into filter row
+        shell: python
         run: |
-          python - <<'PY'
           from pathlib import Path
           import re
           p = Path('shop.html')
-          s = p.read_text()
-          if 'class="shop-cart-inline"' in s and re.search(r'\.shop-cart-inline', s):
-              raise SystemExit('cart already patched')
-          m = re.search(r'<button[^>]*id="cartFab"[^>]*>.*?</button>', s, re.S)
+          s = p.read_text(encoding='utf-8')
+          # Always rebuild the cart's placement instead of guessing from CSS.
+          cart_re = re.compile(r'<button[^>]*\bid=["\']cartFab["\'][^>]*>.*?</button>', re.S)
+          m = cart_re.search(s)
           if not m:
               raise SystemExit('cart button not found')
           cart = m.group(0)
           s = s[:m.start()] + s[m.end():]
-          marker = '<div class="shop-count" id="shopCount">'
-          if marker not in s:
-              raise SystemExit('shop-count marker not found')
-          inline = '<div class="shop-cart-inline">' + cart + '</div>' + marker
-          s = s.replace(marker, inline, 1)
+          tools_start = s.find('<div class="shop-tools">')
+          if tools_start < 0:
+              raise SystemExit('shop-tools not found')
+          filters_start = s.find('<div class="shop-filters">', tools_start)
+          if filters_start < 0:
+              raise SystemExit('shop-filters not found')
+          filters_end = s.find('</div>', filters_start)
+          if filters_end < 0:
+              raise SystemExit('shop-filters closing tag not found')
+          filters_end += len('</div>')
+          insert = '\n        <div class="shop-cart-inline">' + cart + '</div>'
+          s = s[:filters_end] + insert + s[filters_end:]
+          marker = '/* FINAL SHOP CART ROW */'
           css = '''
-    .shop-tools{display:flex;align-items:center;gap:12px;justify-content:flex-start}.shop-cart-inline{display:flex;align-items:center;flex:0 0 auto}.shop-cart-inline .cart-fab{position:static!important;right:auto!important;bottom:auto!important;z-index:200!important;min-width:64px;height:48px;padding:0 15px;margin:0;transform:none!important}.shop-cart-inline .cart-fab:hover{transform:translateY(-1px)!important}
-    @media(max-width:760px){.shop-tools{display:flex;align-items:center;gap:8px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:10px}.shop-filters{display:flex;flex-wrap:nowrap;gap:8px;flex:0 0 auto}.shop-cart-inline{flex:0 0 auto}.shop-cart-inline .cart-fab{height:44px;min-width:58px;padding:0 13px}.shop-count{display:none}.filter-btn{white-space:nowrap}}
+    /* FINAL SHOP CART ROW */
+    .shop-tools{display:flex!important;align-items:center!important;gap:12px!important;justify-content:flex-start!important}
+    .shop-filters{display:flex!important;align-items:center!important;gap:8px!important;flex:1 1 auto!important;min-width:0!important;flex-wrap:nowrap!important;overflow-x:auto!important;scrollbar-width:none!important}
+    .shop-filters::-webkit-scrollbar{display:none!important}
+    .filter-btn{flex:0 0 auto!important;white-space:nowrap!important}
+    .shop-count{display:none!important}
+    .shop-cart-inline{display:flex!important;align-items:center!important;flex:0 0 auto!important;margin-left:0!important}
+    .shop-cart-inline .cart-fab{position:relative!important;top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;transform:none!important;margin:0!important;z-index:300!important;min-width:62px!important;height:44px!important;padding:0 12px!important}
+    .shop-cart-inline .cart-fab:hover{transform:none!important}
+    @media(max-width:760px){
+      .shop-tools{width:100%!important;overflow:hidden!important;padding:18px 0 10px!important}
+      .shop-filters{overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
+      .shop-cart-inline{display:flex!important;flex:0 0 auto!important}
+      .shop-cart-inline .cart-fab{min-width:56px!important;height:42px!important;padding:0 10px!important}
+    }
 '''
-          s = s.replace('</style>', css + '</style>', 1)
-          p.write_text(s)
-          PY
-      - name: Commit change
+          if marker not in s:
+              s = s.replace('</style>', css + '</style>', 1)
+          p.write_text(s, encoding='utf-8')
+      - name: Commit repair and remove stale workflows
+        shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add shop.html
-          git diff --cached --quiet || git commit -m 'Place Shop cart inline with product filters'
-          git push
-      - name: Remove temporary workflow
-        if: always()
-        run: |
-          rm -f .github/workflows/shop-cart-inline.yml
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+users.noreply.github.com'
-          git add .github/workflows/shop-cart-inline.yml
-          git diff --cached --quiet || git commit -m 'Remove temporary cart inline workflow'
+          rm -f .github/workflows/fix-mobile-shop-header.yml .github/workflows/shop-cart-inline.yml
+          git add shop.html .github/workflows/fix-mobile-shop-header.yml .github/workflows/shop-cart-inline.yml
+          git commit -m 'Place Shop cart beside product filters and remove stale workflows'
           git push
